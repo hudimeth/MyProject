@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using MyProject.Data;
-using MyProject.Web.ViewModels;
+using MyProject.Web.ViewModels.Account;
+using MyProject.Web.ViewModels.Cart;
 using System.Security.Claims;
 
 namespace MyProject.Web.Controllers
@@ -12,9 +14,11 @@ namespace MyProject.Web.Controllers
     public class AccountController : ControllerBase
     {
         private readonly string _connectionString;
-        public AccountController(IConfiguration configuration)
+        private IHubContext<CartItemsHub> _hub;
+        public AccountController(IConfiguration configuration, IHubContext<CartItemsHub> hub)
         {
             _connectionString = configuration.GetConnectionString("ConStr");
+            _hub = hub;
         }
 
         [HttpPost]
@@ -56,6 +60,14 @@ namespace MyProject.Web.Controllers
             };
             HttpContext.SignInAsync(new ClaimsPrincipal(
                 new ClaimsIdentity(claims, "Cookies", "user", "role"))).Wait();
+
+            var cartRepo = new CartRepo(_connectionString);
+            var currentUserId = repo.GetByEmail(vm.Email).Id;
+            _hub.Clients.All.SendAsync("updatedcartitemscount", new CartItemsLinkViewModel
+            {
+                ItemsCount = cartRepo.CartItemsCount(currentUserId),
+                Subtotal = cartRepo.CartSubtotal(currentUserId)
+            });
             return user;
         }
         [HttpPost]
@@ -63,6 +75,11 @@ namespace MyProject.Web.Controllers
         public void Logout()
         {
             HttpContext.SignOutAsync().Wait();
+            _hub.Clients.All.SendAsync("updatedcartitemscount", new CartItemsLinkViewModel
+            {
+               ItemsCount = 0,
+               Subtotal = 0
+            });
         }
 
         [HttpGet]

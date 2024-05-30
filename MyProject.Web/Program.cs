@@ -11,13 +11,6 @@ namespace MyProject.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews()
-            .AddJsonOptions(opts =>
-            {
-                var enumConverter = new JsonStringEnumConverter();
-                opts.JsonSerializerOptions.Converters.Add(enumConverter);
-            });
-
             builder.Services.AddAuthentication(CookieScheme)
            .AddCookie(CookieScheme, options =>
            {
@@ -35,7 +28,14 @@ namespace MyProject.Web
 
             builder.Services.AddSession();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+            .AddJsonOptions(opts =>
+            {
+                var enumConverter = new JsonStringEnumConverter();
+                opts.JsonSerializerOptions.Converters.Add(enumConverter);
+            });
+
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -53,6 +53,8 @@ namespace MyProject.Web
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<CartItemsHub>("/api/cartitems");
 
             app.MapControllerRoute(
                 name: "default",

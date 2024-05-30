@@ -24,6 +24,10 @@ const Login = () => {
         const { data } = await axios.post('/api/account/login', formData);
         const isValid = !!data;
         setIsValidLogin(isValid);
+        setFormData({
+            email: '',
+            password: ''
+        })
         if (isValid) {
             setUser(data);
             navigate('/');

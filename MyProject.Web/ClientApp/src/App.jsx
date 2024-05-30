@@ -10,9 +10,10 @@ import ProductsByCategory from './Pages/ProductsByCategory';
 import ProductDetail from './Pages/ProductDetail';
 import PrivateRoute from './Components/PrivateRoute';
 import MyCart from './Pages/MyCart';
+import AddedToCartConfirmation from './Pages/AddedToCartConfirmation';
 
 const App = () => {
-    //i installed axios react-router-dom dayjs floating-ui (popper.js) react-bootstrap bootstrap-icons
+    //i installed axios react-router-dom dayjs floating-ui (popper.js) react-bootstrap bootstrap-icons signalr
     return (
         <AuthContextComponent>
             <Layout>
@@ -23,7 +24,8 @@ const App = () => {
                     <Route exact path='/logout' element={<Logout />} />
                     <Route exact path='/productsbycategory/:categoryId' element={<ProductsByCategory />} />
                     <Route exact path='/productdetail/:productId' element={<ProductDetail />} />
-                    <Route exact path='/mycart' element={<MyCart/>} />
+                    <Route exact path='/mycart' element={<MyCart />} />
+                    <Route exact path='/addedtocartconfirmation' element={<AddedToCartConfirmation/> }/>
                 </Routes>
             </Layout>
         </AuthContextComponent>

@@ -43,5 +43,20 @@ namespace MyProject.Data
             ctx.Database.ExecuteSqlInterpolated($"DELETE FROM CartItems WHERE UserId = {userId} AND ProductId = {productId}");
             ctx.SaveChanges();
         }
+        public int CartItemsCount(int userId)
+        {
+            using var ctx = new MyProjectDbContext(_connectionString);
+            return ctx.CartItems.Count(ci => ci.UserId == userId && !ci.SavedForLater);
+        }
+        public decimal CartSubtotal(int userId)
+        {
+            var ctx = new MyProjectDbContext(_connectionString);
+            return ctx.CartItems.Where(ci => ci.UserId == userId && !ci.SavedForLater).Select(ci => ci.Amount * ci.Product.Price).Sum();
+        }
+        public CartItem ExistingCartItem(int userId, int productId)
+        {
+            var ctx = new MyProjectDbContext(_connectionString);
+            return ctx.CartItems.FirstOrDefault(ci => ci.UserId == userId && ci.ProductId == productId);
+        }
     }
 }

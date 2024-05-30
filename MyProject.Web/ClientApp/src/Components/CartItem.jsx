@@ -2,7 +2,8 @@
 import { Container, Card, Button, Form } from 'react-bootstrap';
 import axios from 'axios'
 
-const CartItem = ({ cartItem, loadCartItems}) => {
+const CartItem = ({ cartItem, loadCartItems }) => {
+
     const { productId, title, description, pricePerUnit, amount, totalPriceForCartItem, savedForLater } = cartItem;
 
     const [realTimeAmount, setRealTimeAmount] = useState(amount);
@@ -17,8 +18,12 @@ const CartItem = ({ cartItem, loadCartItems}) => {
     }
 
     const handleDelete = async () => {
-        console.log(productId);
         await axios.post('/api/cart/deleteitem', { productId });
+        await loadCartItems();
+    }
+
+    const handleSaveForLaterUpdate = async () => {
+        await axios.post('/api/cart/updatecartitem', { productId, amount, savedForLater: !savedForLater });
         await loadCartItems();
     }
 
@@ -38,7 +43,7 @@ const CartItem = ({ cartItem, loadCartItems}) => {
                                 <h5>{description}</h5>
                             </Container>
                             <Container className='col-4 text-center' >
-                                <Form className='col-md-6 offset-md-3'>
+                                <Form>
                                     <Form.Label>Amount:</Form.Label>
                                     <Form.Control type='number' value={realTimeAmount} min='1' ref={amountInput } onChange={e => handleAmountUpdate(e.target.value)} />
                                 </Form>
@@ -57,10 +62,11 @@ const CartItem = ({ cartItem, loadCartItems}) => {
                     </Container>
                     <Container className='row mt-3'>
                         <Container className=' offset-md-4 col-4'>
-                            <Button className='w-100 text-center' variant='info'>Save For Later</Button>
+                            {!savedForLater ? <Button className='w-100 text-center' variant='info' onClick={handleSaveForLaterUpdate}>Save For Later</Button>
+                                : <Button className='w-100 text-center' variant='secondary' onClick={handleSaveForLaterUpdate}>Add to Cart</Button>}
                         </Container>
                         <Container className='col-4'>
-                            <Button className='w-100 text-center' variant='danger' onClick={handleDelete }>Remove From Cart</Button>
+                            <Button className='w-100 text-center' variant='danger' onClick={handleDelete}>{savedForLater ? 'Remove' : 'Remove from Cart'}</Button>
                         </Container>
                     </Container>
                 </Container>

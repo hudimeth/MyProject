@@ -6,6 +6,8 @@ import { useAuth } from '../Components/AuthContextComponent';
 
 const ProductDetail = () => {
 
+    //what to do when you add an item to cart that's already in the cart?
+
     const { productId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -30,7 +32,7 @@ const ProductDetail = () => {
 
     const handleAddToCart = async() => {
         await axios.post('/api/cart/addtocart', { productId: product.id, amount });
-        navigate('/');
+        navigate('/addedtocartconfirmation');
     }
 
     if (product.id == 0) {

@@ -30,6 +30,13 @@ const Signup = () => {
         setUserExistsForThisEmail(userExists);
         const passwordsMatch = data.passwordsMatch;
         setPasswordsMatch(passwordsMatch);
+        setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            passwordConfirmation: ''
+        })
         if (!userExists & passwordsMatch) {
             navigate('/login')
         }

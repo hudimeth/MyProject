@@ -1,4 +1,4 @@
-﻿namespace MyProject.Web.ViewModels
+﻿namespace MyProject.Web.ViewModels.Account
 {
     public class LoginViewModel
     {

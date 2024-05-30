@@ -1,4 +1,4 @@
-﻿namespace MyProject.Web.ViewModels
+﻿namespace MyProject.Web.ViewModels.Cart
 {
     public class CartItemViewModel
     {

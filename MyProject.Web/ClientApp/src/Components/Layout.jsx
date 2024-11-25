@@ -7,7 +7,6 @@ import Cart from '../assets/icons/cart-fill.svg';
 import { HubConnectionBuilder } from '../../node_modules/@microsoft/signalr/dist/esm/HubConnectionBuilder';
 
 const Layout = ({ children }) => {
-
     const { user } = useAuth();
     const [categories, setCategories] = useState([]);
     const [cartItemsLink, setCartItemsLink] = useState({
